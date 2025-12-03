@@ -1,0 +1,136 @@
+// Estilos do Vuexy para o projeto OCR
+@import 'bootstrap/scss/bootstrap';
+
+// Variáveis de cores do Vuexy
+$primary: #7367f0;
+$secondary: #82868b;
+$success: #28c76f;
+$info: #00cfe8;
+$warning: #ff9f43;
+$danger: #ea5455;
+$light: #f8f8f8;
+$dark: #4b4b4b;
+
+// Estilos gerais
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: $light;
+  color: $dark;
+}
+
+// Estilos de cards
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1);
+  margin-bottom: 2rem;
+  
+  .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    
+    h4, h5 {
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+// Estilos de botões
+.btn {
+  font-weight: 500;
+  padding: 0.786rem 1.5rem;
+  border-radius: 0.358rem;
+  
+  &.btn-primary {
+    background-color: $primary;
+    border-color: $primary;
+    
+    &:hover, &:focus {
+      background-color: darken($primary, 5%);
+      border-color: darken($primary, 5%);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: $secondary;
+    border-color: $secondary;
+    
+    &:hover, &:focus {
+      background-color: darken($secondary, 5%);
+      border-color: darken($secondary, 5%);
+    }
+  }
+}
+
+// Estilos para inputs
+.form-control {
+  border-radius: 0.357rem;
+  padding: 0.571rem 1rem;
+  
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 3px 10px 0 rgba($primary, 0.1);
+  }
+}
+
+// Estilos para o componente OCR
+.ocr-container {
+  .ocr-header {
+    margin-bottom: 2rem;
+    
+    h1 {
+      font-weight: 600;
+      color: $primary;
+    }
+  }
+  
+  .ocr-content {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+  }
+  
+  .ocr-result {
+    margin-top: 2rem;
+    
+    pre {
+      background-color: #f6f6f6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+  }
+}
+
+// Estilos para o loading overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  
+  .spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 0.25rem solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

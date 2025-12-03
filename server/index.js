@@ -75,7 +75,7 @@ app.post('/api/ocr', upload.single('file'), async (req, res) => {
     if (!filePath) return res.status(400).json({ error: 'Arquivo não enviado.' });
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const prompt = buildPrompt();
+    const prompt = (req.body?.prompt && String(req.body.prompt)) || buildPrompt();
     const ext = path.extname(originalName).toLowerCase();
     let rawOutput = '{}';
 

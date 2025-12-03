@@ -106,6 +106,59 @@ const extractedFields = reactive({
 });
 const showJson = ref(false);
 const isProcessing = ref(false);
+const showPrompt = ref(false);
+const customPrompt = ref(`Você é um sistema corporativo que extrai dados estruturados de notas fiscais.
+
+REGRAS IMPORTANTES:
+- Retorne SOMENTE JSON válido.
+- Nunca inclua explicações, texto ou comentários.
+- Siga exatamente o schema abaixo.
+- Campos ausentes = null.
+Tarefa:
+Classifique cada item da nota fiscal em uma categoria de gasto.
+
+Instruções:
+Leia a descrição do produto/serviço.
+Quero que coloque os ultimos numeros do cartão, caso esteja disponível na nota fiscal/fatura.
+Caso você identifique que seja uma fatura coloque em tipoGasto = Fatura.
+Determine o tipo de gasto mais adequado com base no que foi comprado.
+Sempre responda usando apenas o nome da categoria, sem explicações adicionais.
+Caso a descrição seja ambígua, escolha a categoria mais provável.
+CATEGORIZE CADA TIPO DE PRODUTO NA FATURA por favor.
+
+Categorias permitidas:
+Alimentação — refeições, lanches, restaurantes, bebida alcólica e mercados relacionados a comida.
+Transporte — Uber, táxi, combustível, passagens.
+Saúde — medicamentos, farmácia, exames.
+Educação — cursos, mensalidades, material escolar.
+Lazer — cinema, jogos, eventos, bares.
+Compras — roupas, eletrônicos, acessórios.
+Serviços — manutenção, consertos, serviços gerais.
+Moradia — aluguel, contas residenciais, móveis.
+Outros — qualquer item que não se encaixe nas categorias acima.
+
+Formato de resposta:
+Retorne um JSON no formato:
+{
+  "descricao": "<texto do item>",
+  "categoria": "<categoria>"
+}
+
+SCHEMA:
+{
+  "numeroCartao": number|null,
+  "valorTotal": number|null,
+  "data": "string|null",
+  "tipoGasto": "string|null",
+  "estabelecimento": "string|null",
+  "itens": [
+    {
+      "descricao": "string|null",
+      "quantidade": number|null,
+      "valor": number|null
+    }
+  ]
+}`);
 
 function showToast(title, description, type = 'info') {
   alert(`${title}\n${description}`);
@@ -236,6 +289,9 @@ async function runOCR(blob) {
 
     const form = new FormData();
     form.append('file', fileToSend);
+    if (customPrompt.value && customPrompt.value.trim().length > 0) {
+      form.append('prompt', customPrompt.value);
+    }
 
     const resp = await fetch('http://localhost:5175/api/ocr', {
       method: 'POST',

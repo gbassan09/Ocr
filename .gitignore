@@ -22,3 +22,51 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+/src/generated/prisma
+# ============================
+# Node / NPM
+# ============================
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# ============================
+# TypeScript
+# ============================
+*.tsbuildinfo
+
+# ============================
+# Java / Maven (código compilado)
+# ============================
+target/
+
+# Diretório gerado pelo tsc
+dist/
+build/
+
+# ============================
+# Ambiente / Configuração
+# ============================
+.env
+.env.local
+.env.*.local
+
+# ============================
+# Configuração VSCode
+# ============================
+.vscode/launch.json
+
+# ============================
+# Logs
+# ============================
+logs/
+*.log
+
+# ============================
+# Arquivos temporários do sistema
+# ============================
+.DS_Store
+Thumbs.db
+src/vuexy

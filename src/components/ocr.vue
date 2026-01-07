@@ -13,7 +13,7 @@
         </button>
         <button class="action-btn secondary" @click="triggerUpload">
           <i class="fas fa-upload"></i>
-          <span>Ler OCR</span>
+          <span>Abrir Arquivo</span>
         </button>
         <input ref="fileInputRef" type="file" accept=".pdf,image/*,.txt" class="d-none" @change="onFileChange" />
       </div>
@@ -91,6 +91,10 @@ function triggerUpload() {
 function onFileChange(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
+
+  console.log('Arquivo selecionado na tela:', file.name);
+  // Nota: Browsers não permitem acesso ao caminho completo do arquivo local por segurança (C:\fakepath\...)
+  
   if (tesseractOcrRef.value) {
     tesseractOcrRef.value.runOCR(file);
   }
@@ -122,17 +126,25 @@ async function captureFromCamera() {
   try {
     const video = cameraVideoRef.value;
     if (!video) return;
+    
+    // 1. Trava a câmera (congela a imagem)
+    video.pause();
+
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
     const blob = await new Promise(resolve => canvas.toBlob(b => resolve(b), 'image/png', 1));
+    
     if (blob && tesseractOcrRef.value) {
       await tesseractOcrRef.value.runOCR(blob);
     }
   } catch (err) {
     cameraError.value = err?.message || String(err);
+    // Se der erro, tenta retomar o vídeo
+    const video = cameraVideoRef.value;
+    if (video) video.play();
   }
 }
 
@@ -164,7 +176,7 @@ function closeCamera() {
   align-items: center;
   gap: 0.75rem;
   padding: 0 1rem;
-  background-image: linear-gradient(135deg, #2563eb, #1e40af);
+  background-image: linear-gradient(135deg, #2563EB, #222844);
   color: #fff;
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);

@@ -30,7 +30,7 @@
 
     <!-- Extracted Fields -->
     <div class="mb-3">
-      <h3 class="h5 mb-2">Campos Extraídos</h3>
+      <h3 class="h5 mb-2">Dados</h3>
       <div class="row g-3">
         <div class="col-12 col-sm-4">
           <div class="border rounded p-3 border-primary border-start border-3">
@@ -87,6 +87,15 @@
     <div v-if="showJson" class="p-3 bg-gray-100 rounded-lg">
       <pre class="text-xs font-mono whitespace-pre-wrap text-gray-600">{{ getJson() }}</pre>
     </div>
+    <div class="mt-3">
+      <button
+        @click="confirmRegister"
+        :disabled="!ocrResult || isProcessing || !lastBlob"
+        class="btn btn-primary w-100"
+      >
+        Confirmar Cadastro
+      </button>
+    </div>
   </div>
 </template>
 
@@ -107,6 +116,7 @@ const extractedFields = reactive({
 const showJson = ref(false);
 const isProcessing = ref(false);
 const showPrompt = ref(false);
+const lastBlob = ref(null);
 const customPrompt = ref(`Você é um sistema corporativo que extrai dados estruturados de notas fiscais.
 
 REGRAS IMPORTANTES:
@@ -292,9 +302,17 @@ async function runOCR(blob) {
     if (customPrompt.value && customPrompt.value.trim().length > 0) {
       form.append('prompt', customPrompt.value);
     }
+    form.append('confirm', '0');
+
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
     const resp = await fetch('http://localhost:5175/api/ocr', {
       method: 'POST',
+      headers,
       body: form,
     });
     if (!resp.ok) {
@@ -306,6 +324,7 @@ async function runOCR(blob) {
     const jsonText = JSON.stringify(json, null, 2);
     ocrResult.value = jsonText;
     parseFields(jsonText);
+    lastBlob.value = fileToSend;
 
     emit('ocr-completed', {
       text: jsonText,
@@ -324,6 +343,40 @@ async function runOCR(blob) {
     isProcessing.value = false;
     ocrProgress.value = 0;
     emit('ocr-progress', 0);
+  }
+}
+
+async function confirmRegister() {
+  if (!lastBlob.value) return;
+  isProcessing.value = true;
+  try {
+    const form = new FormData();
+    form.append('file', lastBlob.value);
+    if (customPrompt.value && customPrompt.value.trim().length > 0) {
+      form.append('prompt', customPrompt.value);
+    }
+    form.append('confirm', '1');
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const resp = await fetch('http://localhost:5175/api/ocr', {
+      method: 'POST',
+      headers,
+      body: form,
+    });
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error(`Falha no servidor: ${resp.status} ${errText}`);
+    }
+    const json = await resp.json();
+    const jsonText = JSON.stringify(json, null, 2);
+    ocrResult.value = jsonText;
+    parseFields(jsonText);
+    showToast('Cadastro confirmado', 'Registro salvo com sucesso.');
+  } catch (err) {
+    showToast('Erro ao salvar', err.message || 'Falha ao confirmar cadastro', 'error');
+  } finally {
+    isProcessing.value = false;
   }
 }
 

@@ -65,7 +65,7 @@
    align-items: center;
    gap: 0.75rem;
    padding: 0 1rem;
-   background-image: linear-gradient(135deg, #2563eb, #1e40af); /* brisa-blue → brisa-blue-dark */
+   background-image: linear-gradient(135deg, #2563EB, #222844);
    color: #fff;
    z-index: 1000;
    box-shadow: 0 2px 8px rgba(0,0,0,0.12);

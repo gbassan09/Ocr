@@ -28,10 +28,10 @@
               <p class="text-muted mb-0">Faça login na sua conta para continuar</p>
             </div>
 
-            <!-- Credenciais de demonstração -->
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <!-- Credenciais de demonstração (Removido) -->
+            <!-- <div class="alert alert-info alert-dismissible fade show" role="alert">
               <small><strong>Demo:</strong> admin@demo.com / admin123</small>
-            </div>
+            </div> -->
 
             <form @submit.prevent="onSubmit">
               <!-- Campo de e-mail -->
@@ -91,7 +91,7 @@
               <!-- Registro de nova conta -->
               <div class="text-center">
                 <span class="text-muted">Novo por aqui? </span>
-                <a href="#" class="text-primary text-decoration-none">Criar uma conta</a>
+                <router-link to="/register" class="text-primary text-decoration-none">Criar uma conta</router-link>
               </div>
             </form>
 
@@ -124,25 +124,37 @@ const isPasswordVisible = ref(false)
 const isLoading = ref(false)
 const errors = ref({ email: undefined, password: undefined })
 
-const credentials = ref({ email: 'admin@demo.com', password: 'admin123' })
+const credentials = ref({ email: '', password: '' })
 const rememberMe = ref(false)
 
 const login = async () => {
   try {
     isLoading.value = true
     errors.value = { email: undefined, password: undefined }
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    if (credentials.value.email === 'admin@demo.com' && credentials.value.password === 'admin123') {
-      const userData = { email: credentials.value.email, name: 'Administrador', role: 'admin' }
-      emit('login', userData)
+    const response = await fetch('http://localhost:5175/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        loginOrEmail: credentials.value.email,
+        senha: credentials.value.password
+      })
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      emit('login', data.user)
       router.push('/home')
     } else {
-      errors.value.email = 'Credenciais inválidas'
-      errors.value.password = 'Credenciais inválidas'
+      const data = await response.json()
+      errors.value.email = data.error
     }
   } catch (err) {
     console.error(err)
-    errors.value.email = 'Erro no servidor'
+    errors.value.email = 'Erro de conexão com o servidor'
   } finally {
     isLoading.value = false
   }

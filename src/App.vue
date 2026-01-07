@@ -5,7 +5,7 @@ import BottomNavbar from './components/BottomNavbar.vue'
 import GlobalStyles from './components/GlobalStyles.vue'
 
 const route = useRoute()
-const showBottomNavbar = computed(() => route.name !== 'login' && route.name !== 'ocr')
+const showBottomNavbar = computed(() => route.name !== 'login' && route.name !== 'ocr' && route.name !== 'register')
 </script>
 
 <template>

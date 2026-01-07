@@ -3,6 +3,10 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  server: {
+    port: 55173,
+    host: true
+  },
   plugins: [
     vue(),
     VitePWA({

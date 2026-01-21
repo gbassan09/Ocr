@@ -11,6 +11,19 @@
         </div>
         <h2 class="upload-title">Carregar Fatura</h2>
         <p class="upload-desc">Faça upload da fatura do cartão corporativo para reconciliação</p>
+        <div class="upload-actions">
+          <button class="gradient-btn" @click="triggerUpload">
+            <i class="fas fa-upload"></i>
+            <span>Selecionar arquivo</span>
+          </button>
+          <input
+            ref="fileInputRef"
+            type="file"
+            accept=".pdf,image/*,.txt"
+            class="d-none"
+            @change="onFileChange"
+          />
+        </div>
       </div>
 
       <div class="glass-panel card-list">
@@ -24,11 +37,21 @@
         </div>
       </div>
     </main>
+    <div v-if="isLoading" class="loading-overlay" aria-live="polite" aria-busy="true">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <div>
+          <div style="font-weight:600;">Processando fatura...</div>
+          <div style="font-size:0.8rem; color:rgba(209,213,219,0.9);">Aguarde um instante</div>
+        </div>
+      </div>
+    </div>
   </div>
  </template>
 
  <script setup lang="ts">
  import CardItem from '../components/CardItem.vue'
+ import { ref } from 'vue'
 
  interface Card {
    cardType: string
@@ -41,6 +64,26 @@
    { cardType: 'Visa', cardNumber: '1234', cardHolder: 'João Silva', status: 'Ativo' },
    { cardType: 'Mastercard', cardNumber: '5678', cardHolder: 'Maria Souza', status: 'Ativo' },
  ]
+
+const isLoading = ref(false)
+const fileInputRef = ref<HTMLInputElement | null>(null)
+
+function triggerUpload() {
+  const el = fileInputRef.value
+  if (el) el.click()
+}
+
+async function onFileChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = target.files && target.files[0]
+  if (!file) return
+  isLoading.value = true
+  try {
+    await new Promise(resolve => setTimeout(resolve, 1200))
+  } finally {
+    isLoading.value = false
+  }
+}
  </script>
 
  <style scoped>
@@ -117,6 +160,57 @@
 
 .list-title { font-size: 12px; font-weight: 700; color: #e5e7eb; margin-bottom: 1rem; }
 .list-items { display: flex; flex-direction: column; gap: 0.5rem; }
+
+ .upload-actions {
+   display: flex;
+   justify-content: center;
+   gap: 0.75rem;
+   margin-top: 0.75rem;
+ }
+ .gradient-btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   padding: 0.625rem 1.25rem;
+   border-radius: 9999px;
+   border: none;
+   background: linear-gradient(to right, #2563eb, #8b5cf6);
+   color: #ffffff;
+   font-size: 0.875rem;
+   font-weight: 600;
+ }
+
+ .loading-overlay {
+   position: fixed;
+   inset: 0;
+   background: rgba(15, 23, 42, 0.65);
+   backdrop-filter: blur(4px);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index: 3000;
+ }
+ .loading-box {
+   background: rgba(17, 24, 39, 0.9);
+   border: 1px solid rgba(148, 163, 184, 0.5);
+   border-radius: 1rem;
+   padding: 1rem 1.25rem;
+   display: flex;
+   align-items: center;
+   gap: 0.75rem;
+   color: #fff;
+ }
+ .spinner {
+   width: 24px;
+   height: 24px;
+   border: 3px solid rgba(148,163,184,0.35);
+   border-top-color: #8b5cf6;
+   border-radius: 50%;
+   animation: spin 0.9s linear infinite;
+ }
+ @keyframes spin {
+   to { transform: rotate(360deg); }
+ }
 
  /* Responsividade */
  @media (min-width: 768px) {

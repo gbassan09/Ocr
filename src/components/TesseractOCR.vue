@@ -104,7 +104,7 @@ SCHEMA:
 }`);
 
 function showToast(title, description, type = 'info') {
-  alert(`${title}\n${description}`);
+  console.log(`[${type}] ${title} - ${description}`);
 }
 
 function copyTxt() {

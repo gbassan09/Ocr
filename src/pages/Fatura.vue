@@ -5,7 +5,7 @@
     </header>
 
     <main class="fatura-main">
-      <div class="card-upload">
+      <div class="glass-panel card-upload">
         <div class="upload-icon">
           <i class="fas fa-upload"></i>
         </div>
@@ -13,7 +13,7 @@
         <p class="upload-desc">Faça upload da fatura do cartão corporativo para reconciliação</p>
       </div>
 
-      <div class="card-list">
+      <div class="glass-panel card-list">
         <h3 class="list-title">Cartões Disponíveis</h3>
         <div class="list-items">
           <CardItem
@@ -24,13 +24,10 @@
         </div>
       </div>
     </main>
-
-    <BottomNavbar />
   </div>
  </template>
 
  <script setup lang="ts">
- import BottomNavbar from '../components/BottomNavbar.vue'
  import CardItem from '../components/CardItem.vue'
 
  interface Card {
@@ -47,13 +44,12 @@
  </script>
 
  <style scoped>
- .fatura-screen {
-   --header-height: 64px;
-   min-height: 100vh;
-   background-color: #f7f7f9; /* brisa-gray-50 */
-   padding-top: var(--header-height); /* evita conteúdo sob o header fixo */
-   padding-bottom: 5rem; /* espaço para BottomNavbar */
- }
+.fatura-screen {
+  --header-height: 64px;
+  min-height: auto;
+  background: radial-gradient(1000px 700px at 20% 0%, #4c1d95 0%, #312e81 45%, #0f172a 100%);
+  padding-top: var(--header-height);
+}
 
  .fatura-header {
    position: fixed;
@@ -77,23 +73,23 @@
    margin: 0;
  }
 
- .fatura-main {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   padding: 1rem;
- }
+.fatura-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
 
- .card-upload {
-   background: #fff;
-   border-radius: 12px;
-   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-   width: 100%;
-   max-width: 343px;
-   padding: 1.5rem 3rem;
-   margin-bottom: 1.5rem;
-   text-align: center;
- }
+.card-upload {
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: none;
+  width: 100%;
+  max-width: 343px;
+  padding: 1.5rem 3rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 
  .upload-icon {
    display: flex;
@@ -107,20 +103,20 @@
    margin: 0 auto 0.5rem;
  }
 
- .upload-title { font-size: 14px; font-weight: 700; color: #4b5563; }
- .upload-desc { font-size: 12px; color: #9ca3af; margin-top: 0.5rem; }
+.upload-title { font-size: 14px; font-weight: 700; color: #e5e7eb; }
+.upload-desc { font-size: 12px; color: #9ca3af; margin-top: 0.5rem; }
 
- .card-list {
-   background: #fff;
-   border-radius: 12px;
-   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-   width: 100%;
-   max-width: 343px;
-   padding: 1rem;
- }
+.card-list {
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: none;
+  width: 100%;
+  max-width: 343px;
+  padding: 1rem;
+}
 
- .list-title { font-size: 12px; font-weight: 700; color: #4b5563; margin-bottom: 1rem; }
- .list-items { display: flex; flex-direction: column; gap: 0.5rem; }
+.list-title { font-size: 12px; font-weight: 700; color: #e5e7eb; margin-bottom: 1rem; }
+.list-items { display: flex; flex-direction: column; gap: 0.5rem; }
 
  /* Responsividade */
  @media (min-width: 768px) {

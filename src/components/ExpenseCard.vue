@@ -42,8 +42,8 @@ const invoiceClass = computed(() => (props.hasInvoice ? 'invoice-ok' : 'invoice-
 
 <style scoped>
 .expense-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: rgba(15, 23, 42, 0.9);
+  border: none;
   border-radius: 10px;
   padding: 12px;
 }
@@ -52,14 +52,14 @@ const invoiceClass = computed(() => (props.hasInvoice ? 'invoice-ok' : 'invoice-
 .expense-left { display: flex; flex-direction: column; gap: 4px; }
 .expense-right { text-align: right; }
 
-.expense-date { font-size: 12px; color: #6b7280; }
-.expense-desc { font-size: 14px; font-weight: 600; color: #1f2937; }
+.expense-date { font-size: 12px; color: rgba(255,255,255,0.6); }
+.expense-desc { font-size: 14px; font-weight: 600; color: #ffffff; }
 
-.expense-meta { display: flex; gap: 8px; font-size: 12px; color: #374151; }
+.expense-meta { display: flex; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.7); }
 .expense-category { font-weight: 500; }
 .expense-project { opacity: 0.8; }
 
-.expense-amount { font-weight: 700; color: #111827; }
+.expense-amount { font-weight: 700; color: #ffffff; }
 .expense-invoice { font-size: 12px; margin-top: 4px; }
 .invoice-ok { color: #16a34a; }
 .invoice-missing { color: #ef4444; }

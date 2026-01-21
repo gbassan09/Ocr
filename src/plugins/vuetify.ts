@@ -1,4 +1,3 @@
-import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 
 export default function installVuetify(app: any) {

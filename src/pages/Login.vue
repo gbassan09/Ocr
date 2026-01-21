@@ -147,7 +147,9 @@ const login = async () => {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
       emit('login', data.user)
-      router.push('/home')
+      const isAdminCreds = credentials.value.email === 'admin@gmail.com' && credentials.value.password === '123456'
+      const isAdminUser = String(data?.user?.email || '').toLowerCase() === 'admin@gmail.com' || String(data?.user?.login || '').toLowerCase() === 'admin'
+      router.push(isAdminCreds || isAdminUser ? '/admin' : '/home')
     } else {
       const data = await response.json()
       errors.value.email = data.error

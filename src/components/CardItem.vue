@@ -32,18 +32,18 @@ const statusClass = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: rgba(15, 23, 42, 0.9);
+  border: none;
   border-radius: 10px;
   padding: 0.75rem 1rem;
 }
 
 .card-left { display: flex; flex-direction: column; }
-.brand { font-weight: 600; color: #111827; }
-.number { font-size: 12px; color: #6b7280; }
+.brand { font-weight: 600; color: #ffffff; }
+.number { font-size: 12px; color: rgba(255,255,255,0.6); }
 
 .card-right { text-align: right; }
-.holder { font-size: 12px; color: #374151; }
+.holder { font-size: 12px; color: rgba(255,255,255,0.7); }
 .status { font-size: 12px; font-weight: 600; }
 .status-active { color: #16a34a; }
 .status-inactive { color: #ef4444; }

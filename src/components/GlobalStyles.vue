@@ -7,7 +7,7 @@
 
 /* Títulos */
 h1, h2, h3, h4, h5, h6 {
-  color: #333;
+  color: #ffffff;
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -50,9 +50,10 @@ h2 {
 
 /* Cards */
 .card {
-  background-color: #ffffff;
+  background-color: rgba(15, 23, 42, 0.9);
   border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: none;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -80,7 +81,7 @@ input:focus, select:focus, textarea:focus {
   max-width: 100%;
   margin-inline: auto;
   padding: 1rem;
-  background-color: #f8f9fa;
+  background-color: transparent;
   min-height: 100vh;
 }
 
@@ -129,4 +130,45 @@ input:focus, select:focus, textarea:focus {
 .p-2 { padding: 0.5rem; }
 .p-3 { padding: 1rem; }
 .p-4 { padding: 1.5rem; }
+
+/* Utilitários de tema escuro e vidro */
+.glass-card {
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 1rem;
+  border: none;
+  backdrop-filter: blur(12px);
+  padding: 1rem;
+  color: #ffffff;
+}
+
+.glass-panel {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.35), rgba(59, 130, 246, 0.25));
+  border-radius: 1rem;
+  border: none;
+  backdrop-filter: blur(20px);
+  padding: 1rem;
+  color: #ffffff;
+}
+
+.glass-input {
+  background: rgba(15, 23, 42, 0.75);
+  border-radius: 0.75rem;
+  border: none;
+  padding: 0.75rem 0.875rem;
+  color: #ffffff;
+}
+
+.text-primary { color: #2563eb; }
+.text-warning { color: #f59e0b; }
+.text-destructive { color: #ef4444; }
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fde68a;
+}
+
+.status-rejected {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fca5a5;
+}
 </style>

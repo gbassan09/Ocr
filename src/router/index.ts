@@ -6,6 +6,8 @@ import Home from '../pages/Home.vue'
 import Carteira from '../pages/Carteira.vue'
 import Fatura from '../pages/Fatura.vue'
 import Configuracao from '../pages/Configuracao.vue'
+import Despesas from '../pages/Despesas.vue'
+import Admin from '../pages/Admin.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
@@ -15,6 +17,8 @@ const routes = [
   { path: '/ocr', name: 'ocr', component: OCR },
   { path: '/carteira', name: 'carteira', component: Carteira },
   { path: '/fatura', name: 'fatura', component: Fatura },
+  { path: '/despesas', name: 'despesas', component: Despesas },
+  { path: '/admin', name: 'admin', component: Admin },
   { path: '/configuracao', name: 'configuracao', component: Configuracao },
 ]
 const router = createRouter({

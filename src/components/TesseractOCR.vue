@@ -1,108 +1,41 @@
 <template>
   <div class="mb-3">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h2 class="h5 mb-0">Resultado do OCR</h2>
-      <div class="btn-group">
-        <button
-          @click="copyTxt"
-          :disabled="!ocrResult"
-          class="btn btn-outline-secondary btn-sm"
-        >
-          <i class="fas fa-copy me-1"></i> Copiar
-        </button>
-        <button
-          @click="downloadTxt"
-          :disabled="!ocrResult"
-          class="btn btn-outline-secondary btn-sm"
-        >
-          <i class="fas fa-download me-1"></i> Salvar TXT
-        </button>
-      </div>
-    </div>
-
-    <textarea
-      v-model="ocrResult"
-      placeholder="O texto reconhecido aparecerá aqui..."
-      spellcheck="false"
-      class="form-control font-monospace mb-3"
-      style="min-height: 200px;"
-    ></textarea>
-
-    <!-- Extracted Fields -->
-    <div class="mb-3">
-      <h3 class="h5 mb-2">Dados</h3>
-      <div class="row g-3">
-        <div class="col-12 col-sm-4">
-          <div class="border rounded p-3 border-primary border-start border-3">
-            <label class="text-uppercase small fw-bold text-muted">
-              CNPJ
-            </label>
-            <p class="font-monospace mb-0 fw-medium">
-              {{ extractedFields.cnpj || '—' }}
-            </p>
-          </div>
+    <div class="result-container">
+      <div class="result-grid">
+        <div class="glass-card">
+          <label class="field-label">CNPJ</label>
+          <p class="field-text">{{ extractedFields.cnpj || '—' }}</p>
         </div>
-        <div class="col-12 col-sm-4">
-          <div class="border rounded p-3 border-success border-start border-3">
-            <label class="text-uppercase small fw-bold text-muted">
-              Data
-            </label>
-            <p class="font-monospace mb-0 fw-medium">
-              {{ extractedFields.data || '—' }}
-            </p>
-          </div>
+        <div class="glass-card">
+          <label class="field-label">Data</label>
+          <p class="field-text">{{ extractedFields.data || '—' }}</p>
         </div>
-        <div class="col-12 col-sm-4">
-          <div class="border rounded p-3 border-primary border-start border-3">
-            <label class="text-uppercase small fw-bold text-muted">
-              Valor Total
-            </label>
-            <p class="font-monospace mb-0 fw-medium">
-              {{ extractedFields.total ? extractedFields.total.toFixed(2) : '—' }}
-            </p>
-          </div>
+        <div class="glass-card">
+          <label class="field-label">Valor Total</label>
+          <p class="field-text">
+            {{ extractedFields.total != null ? extractedFields.total.toFixed(2) : '—' }}
+          </p>
         </div>
       </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex gap-2 flex-wrap">
-      <button
-        @click="parseFields(ocrResult)"
-        :disabled="!ocrResult"
-        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Re-extrair Campos
-      </button>
-      <button
-        @click="showJson = !showJson"
-        :disabled="!extractedFields.cnpj && !extractedFields.data && !extractedFields.total"
-        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {{ showJson ? 'Ocultar' : 'Ver' }} JSON
-      </button>
-    </div>
-
-    <!-- JSON Display -->
-    <div v-if="showJson" class="p-3 bg-gray-100 rounded-lg">
-      <pre class="text-xs font-mono whitespace-pre-wrap text-gray-600">{{ getJson() }}</pre>
-    </div>
-    <div class="mt-3">
-      <button
-        @click="confirmRegister"
-        :disabled="!ocrResult || isProcessing || !lastBlob"
-        class="btn btn-primary w-100"
-      >
-        Confirmar Cadastro
-      </button>
+      <div class="actions">
+        <button
+          @click="confirmRegister"
+          :disabled="!ocrResult || isProcessing || !lastBlob"
+          class="primary-btn"
+        >
+          Carregar cadastro
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['ocr-completed', 'ocr-progress']);
+const router = useRouter();
 
 // Estados principais
 const ocrStatus = ref('');
@@ -373,6 +306,7 @@ async function confirmRegister() {
     ocrResult.value = jsonText;
     parseFields(jsonText);
     showToast('Cadastro confirmado', 'Registro salvo com sucesso.');
+    router.push({ name: 'home' });
   } catch (err) {
     showToast('Erro ao salvar', err.message || 'Falha ao confirmar cadastro', 'error');
   } finally {
@@ -390,3 +324,53 @@ defineExpose({
   }
 });
 </script>
+
+<style scoped>
+.result-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.glass-card {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem;
+}
+.field-label {
+  font-size: 0.75rem;
+  color: rgba(148, 163, 184, 0.9);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+.field-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+.actions {
+  display: flex;
+  margin-top: 0.25rem;
+}
+.primary-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(to right, #2563eb, #8b5cf6);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+</style>

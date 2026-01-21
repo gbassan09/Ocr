@@ -1,6 +1,7 @@
 <template>
   <div class="mb-3">
     <div class="result-container">
+      <div v-if="errorMessage" class="error-banner">{{ errorMessage }}</div>
       <div class="result-grid">
         <div class="glass-card">
           <label class="field-label">CNPJ</label>
@@ -41,6 +42,7 @@ const router = useRouter();
 const ocrStatus = ref('');
 const ocrProgress = ref(0);
 const ocrResult = ref('');
+const errorMessage = ref('');
 const extractedFields = reactive({
   cnpj: null,
   data: null,
@@ -258,6 +260,7 @@ async function runOCR(blob) {
     ocrResult.value = jsonText;
     parseFields(jsonText);
     lastBlob.value = fileToSend;
+    errorMessage.value = '';
 
     emit('ocr-completed', {
       text: jsonText,
@@ -271,6 +274,7 @@ async function runOCR(blob) {
     console.error('Erro no OCR OpenAI:', err);
     ocrStatus.value = 'Erro no processamento: ' + (err.message || err);
     showToast('Erro no OCR', err.message || 'Falha ao processar o arquivo', 'error');
+    errorMessage.value = err.message || 'Não foi possível ler a nota. Tente novamente.';
     throw err;
   } finally {
     isProcessing.value = false;
@@ -306,9 +310,11 @@ async function confirmRegister() {
     ocrResult.value = jsonText;
     parseFields(jsonText);
     showToast('Cadastro confirmado', 'Registro salvo com sucesso.');
+    errorMessage.value = '';
     router.push({ name: 'home' });
   } catch (err) {
     showToast('Erro ao salvar', err.message || 'Falha ao confirmar cadastro', 'error');
+    errorMessage.value = err.message || 'Falha ao confirmar cadastro.';
   } finally {
     isProcessing.value = false;
   }
@@ -330,6 +336,14 @@ defineExpose({
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+.error-banner {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
 }
 .result-grid {
   display: grid;
